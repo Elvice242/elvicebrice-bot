@@ -1,6 +1,6 @@
 //==========================================================
-// ElviceBrice Bot - Serveur Telegram
-// Signal : SmartTrend Arrows v4
+// ElviceBrice Bot v2 - Serveur Telegram
+// 4 alertes : Achat, Vente, Ferme BUY, Ferme SELL
 // Auteur : Elvice242
 //==========================================================
 
@@ -11,12 +11,10 @@ const bodyParser = require('body-parser');
 const app  = express();
 app.use(bodyParser.json());
 
-// Configuration
 const BOT_TOKEN = '8929034815:AAFLAnuWTnxPpWMpgeDH0yh6AtLvCHGNv9Q';
 const CHAT_ID   = '1013708003';
 const PORT      = process.env.PORT || 3000;
 
-// Fonction envoi message Telegram
 async function sendTelegram(message)
   {
    try
@@ -35,87 +33,111 @@ async function sendTelegram(message)
      }
   }
 
-// Fonction heure WAT (UTC+1)
 function getWATTime()
   {
    const now = new Date();
    now.setHours(now.getHours() + 1);
-   return now.toISOString().replace('T', ' ').substring(0, 19) + ' WAT';
+   return now.toISOString().replace('T',' ').substring(0,19) + ' WAT';
   }
 
-// Route principale - Reception signaux TradingView
 app.post('/webhook', async (req, res) =>
   {
    try
      {
-      const data    = req.body;
-      const ticker  = data.ticker  || 'XAUUSD';
-      const action  = data.action  || 'signal';
-      const price   = data.price   || data.close || '---';
-      const tf      = data.interval|| data.tf    || 'M1';
-      const time    = getWATTime();
+      const data   = req.body;
+      const ticker = data.ticker   || 'XAUUSD';
+      const action = (data.action  || '').toLowerCase();
+      const price  = data.price    || '---';
+      const tf     = data.interval || 'M1';
+      const time   = getWATTime();
 
       let message = '';
 
-      // Signal ACHAT
-      if(action.toLowerCase().includes('buy') ||
-         action.toLowerCase().includes('achat') ||
-         action.toLowerCase().includes('long'))
+      // ===== ACHAT =====
+      if(action === 'buy')
         {
          message =
            `⚡ <b>ElviceBrice Signal</b>\n` +
-           `━━━━━━━━━━━━━━━━━━\n` +
-           `🟢 <b>▲ ACHAT</b>\n` +
-           `━━━━━━━━━━━━━━━━━━\n` +
+           `━━━━━━━━━━━━━━━━━━━━\n` +
+           `🟢 <b>▲ ACHAT — OUVRE BUY</b>\n` +
+           `━━━━━━━━━━━━━━━━━━━━\n` +
            `📊 Paire  : <b>${ticker}</b>\n` +
            `⏱ TF     : <b>${tf}</b>\n` +
            `💰 Prix   : <b>${price}</b>\n` +
            `🕐 Heure  : <b>${time}</b>\n` +
-           `━━━━━━━━━━━━━━━━━━\n` +
+           `━━━━━━━━━━━━━━━━━━━━\n` +
            `🎯 TP     : <b>+2$</b>\n` +
            `🛑 SL     : <b>-1.5$</b>\n` +
-           `━━━━━━━━━━━━━━━━━━\n` +
+           `━━━━━━━━━━━━━━━━━━━━\n` +
            `📱 <i>Elvice242 - SmartTrend v4</i>`;
         }
 
-      // Signal VENTE
-      else if(action.toLowerCase().includes('sell') ||
-              action.toLowerCase().includes('vente') ||
-              action.toLowerCase().includes('short'))
+      // ===== VENTE =====
+      else if(action === 'sell')
         {
          message =
            `⚡ <b>ElviceBrice Signal</b>\n` +
-           `━━━━━━━━━━━━━━━━━━\n` +
-           `🔴 <b>▼ VENTE</b>\n` +
-           `━━━━━━━━━━━━━━━━━━\n` +
+           `━━━━━━━━━━━━━━━━━━━━\n` +
+           `🔴 <b>▼ VENTE — OUVRE SELL</b>\n` +
+           `━━━━━━━━━━━━━━━━━━━━\n` +
            `📊 Paire  : <b>${ticker}</b>\n` +
            `⏱ TF     : <b>${tf}</b>\n` +
            `💰 Prix   : <b>${price}</b>\n` +
            `🕐 Heure  : <b>${time}</b>\n` +
-           `━━━━━━━━━━━━━━━━━━\n` +
+           `━━━━━━━━━━━━━━━━━━━━\n` +
            `🎯 TP     : <b>+2$</b>\n` +
            `🛑 SL     : <b>-1.5$</b>\n` +
-           `━━━━━━━━━━━━━━━━━━\n` +
+           `━━━━━━━━━━━━━━━━━━━━\n` +
            `📱 <i>Elvice242 - SmartTrend v4</i>`;
         }
 
-      // Signal generique
+      // ===== FERME BUY =====
+      else if(action === 'close_buy')
+        {
+         message =
+           `⚠️ <b>ElviceBrice — CLÔTURE</b>\n` +
+           `━━━━━━━━━━━━━━━━━━━━\n` +
+           `🟡 <b>FERME TON BUY !</b>\n` +
+           `━━━━━━━━━━━━━━━━━━━━\n` +
+           `📊 Paire  : <b>${ticker}</b>\n` +
+           `⏱ TF     : <b>${tf}</b>\n` +
+           `💰 Prix   : <b>${price}</b>\n` +
+           `🕐 Heure  : <b>${time}</b>\n` +
+           `━━━━━━━━━━━━━━━━━━━━\n` +
+           `🟡 ZigZag Haut détecté\n` +
+           `👉 <b>Prends ton profit !</b>\n` +
+           `━━━━━━━━━━━━━━━━━━━━\n` +
+           `📱 <i>Elvice242 - SmartTrend v4</i>`;
+        }
+
+      // ===== FERME SELL =====
+      else if(action === 'close_sell')
+        {
+         message =
+           `⚠️ <b>ElviceBrice — CLÔTURE</b>\n` +
+           `━━━━━━━━━━━━━━━━━━━━\n` +
+           `🟡 <b>FERME TON SELL !</b>\n` +
+           `━━━━━━━━━━━━━━━━━━━━\n` +
+           `📊 Paire  : <b>${ticker}</b>\n` +
+           `⏱ TF     : <b>${tf}</b>\n` +
+           `💰 Prix   : <b>${price}</b>\n` +
+           `🕐 Heure  : <b>${time}</b>\n` +
+           `━━━━━━━━━━━━━━━━━━━━\n` +
+           `🟡 ZigZag Bas détecté\n` +
+           `👉 <b>Prends ton profit !</b>\n` +
+           `━━━━━━━━━━━━━━━━━━━━\n` +
+           `📱 <i>Elvice242 - SmartTrend v4</i>`;
+        }
+
+      if(message)
+        {
+         await sendTelegram(message);
+         res.json({ success: true });
+        }
       else
         {
-         message =
-           `⚡ <b>ElviceBrice Signal</b>\n` +
-           `━━━━━━━━━━━━━━━━━━\n` +
-           `📊 Paire  : <b>${ticker}</b>\n` +
-           `⏱ TF     : <b>${tf}</b>\n` +
-           `💰 Prix   : <b>${price}</b>\n` +
-           `📌 Signal : <b>${action}</b>\n` +
-           `🕐 Heure  : <b>${time}</b>\n` +
-           `━━━━━━━━━━━━━━━━━━\n` +
-           `📱 <i>Elvice242 - SmartTrend v4</i>`;
+         res.json({ success: false, error: 'Action non reconnue : ' + action });
         }
-
-      await sendTelegram(message);
-      res.json({ success: true, message: 'Signal envoye' });
      }
    catch(err)
      {
@@ -124,32 +146,35 @@ app.post('/webhook', async (req, res) =>
      }
   });
 
-// Route test
 app.get('/', (req, res) =>
   {
    res.json({
-     status  : 'ElviceBrice Bot actif',
-     version : '1.0',
-     auteur  : 'Elvice242'
+     status  : 'ElviceBrice Bot v2 actif',
+     version : '2.0',
+     auteur  : 'Elvice242',
+     alertes : ['buy','sell','close_buy','close_sell']
     });
   });
 
-// Route test signal
 app.get('/test', async (req, res) =>
   {
    await sendTelegram(
-     `⚡ <b>ElviceBrice Bot</b>\n` +
-     `━━━━━━━━━━━━━━━━━━\n` +
-     `✅ Bot actif et connecte !\n` +
+     `⚡ <b>ElviceBrice Bot v2</b>\n` +
+     `━━━━━━━━━━━━━━━━━━━━\n` +
+     `✅ <b>4 alertes actives :</b>\n` +
+     `🟢 ▲ Signal ACHAT\n` +
+     `🔴 ▼ Signal VENTE\n` +
+     `🟡 Ferme BUY (ZigZag haut)\n` +
+     `🟡 Ferme SELL (ZigZag bas)\n` +
+     `━━━━━━━━━━━━━━━━━━━━\n` +
      `🕐 ${getWATTime()}\n` +
-     `━━━━━━━━━━━━━━━━━━\n` +
+     `━━━━━━━━━━━━━━━━━━━━\n` +
      `📱 <i>Elvice242 - SmartTrend v4</i>`
     );
-   res.json({ success: true, message: 'Message test envoye sur Telegram' });
+   res.json({ success: true });
   });
 
 app.listen(PORT, () =>
   {
-   console.log(`ElviceBrice Bot demarre sur port ${PORT}`);
-   console.log(`Webhook : http://localhost:${PORT}/webhook`);
+   console.log(`ElviceBrice Bot v2 demarre sur port ${PORT}`);
   });
