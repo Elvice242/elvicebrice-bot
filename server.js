@@ -66,8 +66,8 @@ app.post('/webhook', async (req, res) =>
            `💰 Prix   : <b>${price}</b>\n` +
            `🕐 Heure  : <b>${time}</b>\n` +
            `━━━━━━━━━━━━━━━━━━━━\n` +
-           `🎯 TP     : <b>+2$</b>\n` +
            `🛑 SL     : <b>-1.5$</b>\n` +
+           `⏳ TP     : <b>Attends ZigZag 🟡</b>\n` +
            `━━━━━━━━━━━━━━━━━━━━\n` +
            `📱 <i>Elvice242 - SmartTrend v4</i>`;
         }
@@ -85,8 +85,8 @@ app.post('/webhook', async (req, res) =>
            `💰 Prix   : <b>${price}</b>\n` +
            `🕐 Heure  : <b>${time}</b>\n` +
            `━━━━━━━━━━━━━━━━━━━━\n` +
-           `🎯 TP     : <b>+2$</b>\n` +
            `🛑 SL     : <b>-1.5$</b>\n` +
+           `⏳ TP     : <b>Attends ZigZag 🟡</b>\n` +
            `━━━━━━━━━━━━━━━━━━━━\n` +
            `📱 <i>Elvice242 - SmartTrend v4</i>`;
         }
@@ -104,7 +104,7 @@ app.post('/webhook', async (req, res) =>
            `💰 Prix   : <b>${price}</b>\n` +
            `🕐 Heure  : <b>${time}</b>\n` +
            `━━━━━━━━━━━━━━━━━━━━\n` +
-           `🟡 ZigZag Haut détecté\n` +
+           `🟡 ZigZag Haut détecté !\n` +
            `👉 <b>Prends ton profit !</b>\n` +
            `━━━━━━━━━━━━━━━━━━━━\n` +
            `📱 <i>Elvice242 - SmartTrend v4</i>`;
@@ -123,7 +123,7 @@ app.post('/webhook', async (req, res) =>
            `💰 Prix   : <b>${price}</b>\n` +
            `🕐 Heure  : <b>${time}</b>\n` +
            `━━━━━━━━━━━━━━━━━━━━\n` +
-           `🟡 ZigZag Bas détecté\n` +
+           `🟡 ZigZag Bas détecté !\n` +
            `👉 <b>Prends ton profit !</b>\n` +
            `━━━━━━━━━━━━━━━━━━━━\n` +
            `📱 <i>Elvice242 - SmartTrend v4</i>`;
@@ -162,10 +162,10 @@ app.get('/test', async (req, res) =>
      `⚡ <b>ElviceBrice Bot v2</b>\n` +
      `━━━━━━━━━━━━━━━━━━━━\n` +
      `✅ <b>4 alertes actives :</b>\n` +
-     `🟢 ▲ Signal ACHAT\n` +
-     `🔴 ▼ Signal VENTE\n` +
-     `🟡 Ferme BUY (ZigZag haut)\n` +
-     `🟡 Ferme SELL (ZigZag bas)\n` +
+     `🟢 ▲ Signal ACHAT — Ouvre BUY\n` +
+     `🔴 ▼ Signal VENTE — Ouvre SELL\n` +
+     `🟡 ZigZag Haut — Ferme BUY\n` +
+     `🟡 ZigZag Bas  — Ferme SELL\n` +
      `━━━━━━━━━━━━━━━━━━━━\n` +
      `🕐 ${getWATTime()}\n` +
      `━━━━━━━━━━━━━━━━━━━━\n` +
